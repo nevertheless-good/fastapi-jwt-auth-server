@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+sqlalchemy
+bcrypt
+jwt
+passlib

@@ -3,4 +3,15 @@ uvicorn
 sqlalchemy
 bcrypt
 jwt
+PyJWT
 passlib
+pytest
+httpcore
+httpx
+anyio
+pytest-asyncio
+pytest-tornasync
+pytest-trio
+pytest-twisted
+twisted
+service_identity

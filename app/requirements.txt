@@ -1,8 +1,8 @@
 fastapi
 uvicorn
 sqlalchemy
+pymysql
 bcrypt
-jwt
 PyJWT
 passlib
 pytest
@@ -15,3 +15,4 @@ pytest-trio
 pytest-twisted
 twisted
 service_identity
+requests

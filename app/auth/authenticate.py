@@ -19,8 +19,8 @@ class AuthHandler():
 
 	def encode_token(self, email, type):
 		payload = dict(
-			sub = email,
-			token_type = type
+			iss = email,
+			sub = type
 		)
 		to_encode = payload.copy()
 		if type == "access_token":
@@ -52,20 +52,20 @@ class AuthHandler():
 	def decode_access_token(self, token):
 		try:
 			payload = jwt.decode(token, self.secret, algorithms=['HS256'])
-			if payload['token_type'] != "access_token":
+			if payload['sub'] != "access_token":
 				raise HTTPException(status_code=401, detail='Invalid token')
-			return payload['sub']
+			return payload['iss']
 		except jwt.ExpiredSignatureError:
-			raise HTTPException(status_code=401, detail='Sinature has expired')
+			raise HTTPException(status_code=401, detail='Signature has expired')
 		except jwt.InvalidTokenError as e:
 			raise HTTPException(status_code=401, detail='Invalid token')
 
 	def decode_refresh_token(self, token):
 		try:
 			payload = jwt.decode(token, self.secret, algorithms=['HS256'])
-			if payload['token_type'] != "refresh_token":
+			if payload['sub'] != "refresh_token":
 				raise HTTPException(status_code=401, detail='Invalid token')
-			return payload['sub']
+			return payload['iss']
 		except jwt.ExpiredSignatureError:
 			raise HTTPException(status_code=401, detail='Sinature has expired')
 		except jwt.InvalidTokenError as e:

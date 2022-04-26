@@ -38,7 +38,7 @@ def get_my_post(limit: int = 10, db: Session=conn_db, username=Depends(auth_hand
 
 @router.get("/posts/{post_id}", response_model=_schemas.Content)
 def get_post(post_id: int, db: Session=conn_db, username=Depends(auth_handler.auth_access_wrapper)):
-	db_post = _posts.get_post(db=db, post_id=post_id)
+	db_post = _posts.get_detail(db=db, post_id=post_id)
 	if db_post is None:
 		raise HTTPException(status_code=404, detail="This post does not exist")
 	return db_post

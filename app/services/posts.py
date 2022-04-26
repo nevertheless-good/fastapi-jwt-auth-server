@@ -29,6 +29,9 @@ def get_my_posts(db: Session, limit: int, username: str):
 
 
 def get_post(db: Session, post_id: int):
+	return db.query(_models.Post).filter(_models.Post.id == post_id).first()
+
+def get_detail(db: Session, post_id: int):
 	return db.query(_models.Post.detail).filter(_models.Post.id == post_id).first()
 
 
@@ -38,7 +41,7 @@ def delete_post(db: Session, post_id: int):
 
 
 def update_post(db: Session, post_id: int, post: _schemas.PostCreate):
-	db_post = get_post(db=db, post_id=post_id)
+	db_post = db.query(_models.Post).filter(_models.Post.id == post_id).first()
 	db_post.title = post.title
 	db_post.detail = post.detail
 	db_post.date_last_updated = datetime.now()

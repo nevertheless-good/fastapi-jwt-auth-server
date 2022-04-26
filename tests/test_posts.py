@@ -14,7 +14,7 @@ def test_get_posts(client):
 	headers = {
         "Authorization": f"Bearer {_g.access_token}"
 	}
-	res = client.get("/posts", headers=headers)
+	res = client.get("/posts/?start=0&limit=10&order=desc", headers=headers)
 	assert res.status_code == 200
 	res_body = res.json()
 	assert "id" in res_body[0].keys()

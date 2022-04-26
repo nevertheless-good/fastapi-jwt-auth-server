@@ -4,7 +4,6 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 
-
 class AuthHandler():
 	security = HTTPBearer()
 	pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -17,22 +16,22 @@ class AuthHandler():
 	def verify_password(self, plain_password, hashed_password):
 		return self.pwd_context.verify(plain_password, hashed_password)
 
-	def encode_token(self, email, type):
+	def encode_token(self, username, type):
 		payload = dict(
-			iss = email,
+			iss = username,
 			sub = type
 		)
 		to_encode = payload.copy()
 		if type == "access_token":
-			to_encode.update({"exp": datetime.utcnow() + timedelta(minutes=10)})
+			to_encode.update({"exp": datetime.utcnow() + timedelta(minutes=1)})
 		else:
 			to_encode.update({"exp": datetime.utcnow() + timedelta(hours=720)})
 
 		return jwt.encode(to_encode, self.secret, algorithm='HS256')
 
-	def encode_login_token(self, email):
-		access_token = self.encode_token(email, "access_token")
-		refresh_token = self.encode_token(email, "refresh_token")
+	def encode_login_token(self, username):
+		access_token = self.encode_token(username, "access_token")
+		refresh_token = self.encode_token(username, "refresh_token")
 
 		login_token = dict(
 			access_token=f"{access_token}",
@@ -40,8 +39,8 @@ class AuthHandler():
 		) 
 		return login_token
 
-	def encode_update_token(self, email):
-		access_token = self.encode_token(email, "access_token")
+	def encode_update_token(self, username):
+		access_token = self.encode_token(username, "access_token")
 
 		update_token = dict(
 			access_token=f"{access_token}"

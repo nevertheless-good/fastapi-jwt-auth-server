@@ -17,7 +17,7 @@ router = APIRouter()
 
 @router.post("/register", status_code=201, response_model=_schemas.User)
 def create_user(user: _schemas.UserCreate, db: Session=conn_db):
-	db_user = _users.get_user_by_email(db=db, email=user.email)
+	db_user = _users.get_user_by_username(db=db, username=user.username)
 	if db_user:
 		raise HTTPException(status_code=400, detail="The E-Mail is already used")
 	user.password = auth_handler.get_password_hash(user.password)
@@ -25,13 +25,13 @@ def create_user(user: _schemas.UserCreate, db: Session=conn_db):
 
 @router.post("/login", response_model=_schemas.LoginToken)
 def login_user(user: _schemas.UserCreate, db: Session=conn_db):
-	db_user = _users.get_user_by_email(db=db, email=user.email)
+	db_user = _users.get_user_by_username(db=db, username=user.username)
 	if db_user is None:
 		raise HTTPException(status_code=401, detail="The E-Mail is not exist")
 	is_verified = auth_handler.verify_password(user.password, db_user.hashed_password)
 	if not is_verified:
 		raise HTTPException(status_code=401, detail="Password does not matched")
-	return auth_handler.encode_login_token(user.email)
+	return auth_handler.encode_login_token(user.username)
 
 
 @router.get("/users", response_model=List[_schemas.User])

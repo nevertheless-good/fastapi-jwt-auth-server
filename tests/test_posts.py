@@ -5,7 +5,7 @@ def test_write_post(client):
 	headers = {
         "Authorization": f"Bearer {_g.access_token}"
 	}
-	post = dict(title="title test", content="content test")
+	post = dict(title="title test", detail="detail test")
 	res = client.post("/posts", json=post, headers=headers)
 	assert res.status_code == 201
 
@@ -33,12 +33,12 @@ def test_update_post(client):
 	headers = {
         "Authorization": f"Bearer {_g.access_token}"
 	}
-	post = dict(title="title update", content="content update")
+	post = dict(title="title update", detail="detail update")
 	res = client.put(f"/posts/{_g.test_index}", json=post, headers=headers)
 	res_body = res.json()
 	assert res.status_code == 200
 	assert "title update" == res_body["title"]
-	assert "content update" == res_body["content"]
+	assert "detail update" == res_body["detail"]
 
 def test_delete_post(client):
 	headers = {

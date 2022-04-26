@@ -7,8 +7,8 @@ class Post(_database.Base):
 	__tablename__ = "posts"
 	id = Column(Integer, primary_key=True, index=True)
 	title = Column(String(255), index=True)
-	content = Column(String(255), index=True)
-	email = Column(String(255), index=True)
+	detail = Column(String(1024), index=False)
+	username = Column(String(255), index=False)
 	date_created = Column(DateTime, default=datetime.utcnow)
 	date_last_updated = Column(DateTime, default=datetime.utcnow)
 

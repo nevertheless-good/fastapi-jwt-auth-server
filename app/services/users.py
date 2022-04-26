@@ -5,12 +5,12 @@ import app.models.users as _models
 import app.schemas.users as _schemas
 
 
-def get_user_by_email(db: Session, email: str):
-	return db.query(_models.User).filter(_models.User.email == email).first()
+def get_user_by_username(db: Session, username: str):
+	return db.query(_models.User).filter(_models.User.username == username).first()
 
 
 def create_user(db: Session, user: _schemas.UserCreate):
-	db_user = _models.User(email=user.email, hashed_password=user.password)
+	db_user = _models.User(username=user.username, hashed_password=user.password)
 	db.add(db_user)
 	db.commit()
 	db.refresh(db_user)

@@ -16,27 +16,28 @@ conn_db = Depends(_database.get_db)
 router = APIRouter()
 
 
-@router.get("/posts", response_model=List[_schemas.Post])
-def read_posts(skip: int = 0, limit: int = 10, db: Session=conn_db, username=Depends(auth_handler.auth_access_wrapper)):
-	db_posts = _posts.get_posts(db=db, skip=skip, limit=limit)
+@router.get("/posts", response_model=List[_schemas.PostsList])
+def read_posts(start: int = 0, limit: int = 10, order: str = "asc",
+				db: Session=conn_db, username=Depends(auth_handler.auth_access_wrapper)):
+	db_posts = _posts.get_posts(db=db, start=start, limit=limit, order=order)
 	return db_posts
 
 
-@router.post("/posts", status_code=201, response_model=_schemas.Post)
+@router.post("/posts", status_code=201, response_model=_schemas.PostResult)
 def create_post(post: _schemas.PostCreate, db: Session=conn_db, username=Depends(auth_handler.auth_access_wrapper)):
-#	db_user = _users.get_user_by_email(db=db, email=username)
+#	db_user = _users.get_user_by_username(db=db, username=username)
 #	if db_user is None:
 #		raise HTTPException(status_code=401, detail="Unauthorized")
-	return _posts.create_post(db=db, post=post, email=username)
+	return _posts.create_post(db=db, post=post, username=username)
 
 
-@router.get("/posts/my_post", response_model=List[_schemas.Post])
-def read_my_post(skip: int = 0, limit: int = 10, db: Session=conn_db, username=Depends(auth_handler.auth_access_wrapper)):
-	db_posts = _posts.get_my_posts(db=db, skip=skip, limit=limit, email=username)
+@router.get("/posts/my_post", response_model=List[_schemas.PostsList])
+def get_my_post(limit: int = 10, db: Session=conn_db, username=Depends(auth_handler.auth_access_wrapper)):
+	db_posts = _posts.get_my_posts(db=db, limit=limit, username=username)
 	return db_posts
 
-@router.get("/posts/{post_id}", response_model=_schemas.Post)
-def read_post(post_id: int, db: Session=conn_db, username=Depends(auth_handler.auth_access_wrapper)):
+@router.get("/posts/{post_id}", response_model=_schemas.Content)
+def get_post(post_id: int, db: Session=conn_db, username=Depends(auth_handler.auth_access_wrapper)):
 	db_post = _posts.get_post(db=db, post_id=post_id)
 	if db_post is None:
 		raise HTTPException(status_code=404, detail="This post does not exist")
@@ -48,7 +49,7 @@ def delete_post(post_id: int, db: Session=conn_db, username=Depends(auth_handler
 	db_post = _posts.get_post(db=db, post_id=post_id)
 	if db_post is None:
 		raise HTTPException(status_code=404, detail="This post does not exist") 
-	if db_post.email != username:
+	if db_post.username != username:
 		raise HTTPException(status_code=401, detail="Unauthorized")
 	_posts.delete_post(db=db, post_id=post_id)
 	return {"message" : f"successfully deleted post with id: {post_id}"}
@@ -59,6 +60,6 @@ def update_post(post_id: int, post: _schemas.PostCreate, db: Session=conn_db, us
 	db_post = _posts.get_post(db=db, post_id=post_id)
 	if db_post is None:
 		raise HTTPException(status_code=404, detail="This post does not exist") 
-	if db_post.email != username:
+	if db_post.username != username:
 		raise HTTPException(status_code=401, detail="Unauthorized")
 	return _posts.update_post(db=db, post_id=post_id, post=post)

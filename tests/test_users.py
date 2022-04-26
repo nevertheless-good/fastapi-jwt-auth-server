@@ -3,13 +3,13 @@ import global_vars as _g
 print(_g.access_token)
 
 #def test_register(client):
-#	user = dict(email="test@gmail.com", password="test")
+#	user = dict(username="test@gmail.com", password="test")
 #	res = client.post("register", json=user)
 #	assert res.status_code == 201
 	
 
 #def test_again_register(client):
-#	user = dict(email="test@gmail.com", password="test")
+#	user = dict(username="test@gmail.com", password="test")
 #	res = client.post("register", json=user)
 #	res_body = res.json()
 #	assert res.status_code == 400
@@ -17,7 +17,7 @@ print(_g.access_token)
 
 
 def test_login(client):
-	user = dict(email="test@gmail.com", password="test")
+	user = dict(username="test@gmail.com", password="test")
 	res = client.post("login", json=user)
 	res_body = res.json()
 	assert res.status_code == 200

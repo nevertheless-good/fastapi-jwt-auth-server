@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 class _PostBase(BaseModel):
 	title: str
-	content: str
+	detail: str
 
 
 class PostCreate(_PostBase):
@@ -14,11 +14,31 @@ class PostCreate(_PostBase):
 
 class Post(_PostBase):
 	id: int
-	email: str
-	title: str
-	content: str
+	username: str
 	date_created: datetime
 	date_last_updated: datetime
+
+	class Config:
+		orm_mode = True
+
+
+class PostsList(BaseModel):
+	id: int
+	title: str
+	username: str
+	date_last_updated: datetime
+
+	class Config:
+		orm_mode = True
+
+class Content(BaseModel):
+	detail: str
+
+	class Config:
+		orm_mode = True
+
+class PostResult(BaseModel):
+	title: str
 
 	class Config:
 		orm_mode = True

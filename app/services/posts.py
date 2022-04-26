@@ -16,7 +16,7 @@ def create_post(db: Session, post: _schemas.PostCreate, username: str):
 
 def get_posts(db: Session, start: int, limit: int, order: str):
 	#return db.query(_models.Post).order_by(desc("id")).offset(skip).limit(limit).all()
-	if start == 0:
+	if start == 9999999999999:
 		return db.query(_models.Post.id, _models.Post.title, _models.Post.username, _models.Post.date_last_updated).order_by(desc("id")).limit(limit).all()
 	elif order == "asc":
 		return db.query(_models.Post.id, _models.Post.title, _models.Post.username, _models.Post.date_last_updated).order_by("id").filter(_models.Post.id >= start).limit(limit).all()
